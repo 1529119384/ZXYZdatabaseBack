@@ -20,6 +20,7 @@ public class UserServiceImpl implements UserService {
     public String login(User user) {
         User u = userMapper.getByUsernameAndPassword(user);
         if (u != null) {
+            System.out.println(u);
             return JwtUtils.generateJwt(u);
         } else {
             return null;
