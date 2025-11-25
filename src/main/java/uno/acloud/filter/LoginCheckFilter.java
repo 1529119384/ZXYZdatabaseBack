@@ -19,6 +19,10 @@ public class LoginCheckFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
+        if ("OPTIONS".equals(request.getMethod())) {
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
         String requestURI = request.getRequestURI();// /login
         //不校验登录请求和注册请求
         if (requestURI.contains("login") || requestURI.contains("register")) {
