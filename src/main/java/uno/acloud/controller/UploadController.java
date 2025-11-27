@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import uno.acloud.anno.Log;
 import uno.acloud.pojo.Result;
-import uno.acloud.service.UploadToLocal;
+import uno.acloud.utils.UploadToLocal;
 import uno.acloud.utils.OSSUploader;
 
 @Slf4j
@@ -27,6 +27,7 @@ public class UploadController {
         //输出日志
         log.info("开始,文件上传操作,文件名:{}", file.getOriginalFilename());
         log.info("文件上传操作,文件大小:{}", file.getSize());
+        log.info("文件上传操作,文件类型:{}", file.getContentType());
 
         Result result = uploadToLocal.upload(file);
         if (result.getCode() == 1) {
@@ -45,5 +46,7 @@ public class UploadController {
         } else {
             return Result.error(result.getMessage());
         }*/
+
+
     }
 }

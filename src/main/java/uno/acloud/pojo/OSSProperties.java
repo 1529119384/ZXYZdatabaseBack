@@ -1,4 +1,4 @@
-package uno.acloud.utils;
+package uno.acloud.pojo;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
