@@ -24,11 +24,3 @@ oss:
   bucket: zxyz-database
 server:
   port: 8080
-
-
-  # 允许所有来源跨域（开发阶段用）
-  cors:
-    allowed-origins: "*"
-    allowed-methods: GET,POST,PUT,DELETE,OPTIONS
-    allowed-headers: "*"
-    allow-credentials: false
