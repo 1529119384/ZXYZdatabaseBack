@@ -28,8 +28,13 @@ public class UploadController {
 
         log.info("开始上传文件，文件名：{}，大小：{}，类型：{}",
                 file.getOriginalFilename(), file.getSize(), file.getContentType());
+        String url = uploadToLocal.upload(file);
 
-        return uploadToLocal.upload(file);
+
+
+
+
+        return Result.success(url);
 
         // OSSUploader 成功返回 URL，失败抛 FileUploadException，由 GlobalExceptionHandler 转 Result
 //        String url = ossUploader.upload(file);
