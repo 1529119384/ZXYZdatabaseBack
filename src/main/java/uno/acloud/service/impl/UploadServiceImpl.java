@@ -6,10 +6,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import uno.acloud.anno.Log;
+import uno.acloud.mapper.UploadMapper;
+import uno.acloud.pojo.FileInfo;
 import uno.acloud.pojo.Result;
 import uno.acloud.service.UploadService;
 import uno.acloud.utils.OSSUploader;
 import uno.acloud.utils.UploadToLocal;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -19,11 +23,12 @@ public class UploadServiceImpl implements UploadService {
     private OSSUploader ossUploader;
     @Autowired
     private UploadToLocal uploadToLocal;
-
+    @Autowired
+    private UploadMapper uploadMapper;
 
     @Log
     @PostMapping("/upload")
-    public String upload(MultipartFile file) {
+    public String upload(MultipartFile file, Long parentId,Integer userId) {
         if (file == null || file.isEmpty()) {
             return null;
         }
@@ -31,6 +36,28 @@ public class UploadServiceImpl implements UploadService {
         log.info("开始上传文件，文件名：{}，大小：{}，类型：{}",
                 file.getOriginalFilename(), file.getSize(), file.getContentType());
         String url = uploadToLocal.upload(file);
+
+        if (url == null) {
+            log.info("上传文件失败");
+            return null;
+        }
+
+        FileInfo fileInfo = new FileInfo();
+
+        fileInfo.setFileType(1);
+        fileInfo.setFileName(file.getOriginalFilename());
+        fileInfo.setCategory(0);
+        fileInfo.setFileSize(file.getSize());
+        fileInfo.setFileUrl(url);
+        fileInfo.setUserId(userId);
+        fileInfo.setParentId(parentId);
+        fileInfo.setCreateTime(LocalDateTime.now());
+        fileInfo.setModifyTime(LocalDateTime.now());
+        fileInfo.setDeleted(0);
+
+
+        uploadMapper.add(fileInfo);
+
 
 
         return url;
