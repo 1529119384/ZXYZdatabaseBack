@@ -12,8 +12,7 @@ import java.util.Map;
 public class JwtUtils {
     public static String generateJwt(User u) {
         Map<String, Object> claims = new java.util.HashMap<>();
-        claims.put("id", u.getId());
-//        claims.put("name", u.getName());
+        claims.put("userId", u.getId());
         claims.put("username", u.getUsername());
 
         String jwt = Jwts.builder()
