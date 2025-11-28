@@ -7,12 +7,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import uno.acloud.anno.Log;
 import uno.acloud.pojo.Result;
-import uno.acloud.utils.UploadToLocal;
 import uno.acloud.utils.OSSUploader;
+import uno.acloud.utils.UploadToLocal;
 
 @Slf4j
 @RestController
 public class UploadController {
+
     @Autowired
     private OSSUploader ossUploader;
     @Autowired
@@ -24,29 +25,15 @@ public class UploadController {
         if (file == null || file.isEmpty()) {
             return Result.error("上传文件不能为空");
         }
-        //输出日志
-        log.info("开始,文件上传操作,文件名:{}", file.getOriginalFilename());
-        log.info("文件上传操作,文件大小:{}", file.getSize());
-        log.info("文件上传操作,文件类型:{}", file.getContentType());
 
-        Result result = uploadToLocal.upload(file);
-        if (result.getCode() == 1) {
-            log.info("结束,文件上传成功,访问地址:{}", result.getData());
-            return Result.success(result.getData());
-        } else {
-            return Result.error(result.getMessage());
-        }
+        log.info("开始上传文件，文件名：{}，大小：{}，类型：{}",
+                file.getOriginalFilename(), file.getSize(), file.getContentType());
 
+        return uploadToLocal.upload(file);
 
-        // 调用阿里云OSS上传文件
-        /*Result result = ossUploader.upload(file);
-        if (result.getCode() == 1) {
-            log.info("结束,文件上传成功,访问地址:{}", result.getData());
-            return Result.success(result.getData());
-        } else {
-            return Result.error(result.getMessage());
-        }*/
-
-
+        // OSSUploader 成功返回 URL，失败抛 FileUploadException，由 GlobalExceptionHandler 转 Result
+//        String url = ossUploader.upload(file);
+//        log.info("文件上传成功，访问地址：{}", url);
+//        return Result.success(url);
     }
 }
