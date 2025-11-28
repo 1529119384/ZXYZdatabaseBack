@@ -46,8 +46,15 @@ public class UploadServiceImpl implements UploadService {
 
         fileInfo.setFileType(1);
         fileInfo.setFileName(file.getOriginalFilename());
+        /*
+         * 文件小类没更新
+         * */
         fileInfo.setCategory(0);
         fileInfo.setFileSize(file.getSize());
+        /*
+        * 文件路径没更新，前端还没适配
+        * */
+        fileInfo.setStorePath("555");
         fileInfo.setFileUrl(url);
         fileInfo.setUserId(userId);
         fileInfo.setParentId(parentId);
