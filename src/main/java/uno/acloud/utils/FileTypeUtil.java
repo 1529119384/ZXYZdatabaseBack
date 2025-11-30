@@ -66,6 +66,8 @@ public final class FileTypeUtil {
         // word
         EXT_MAP.put("doc", 1);
         EXT_MAP.put("docx", 1);
+        // ✅ 新增：markdown 也算文档
+        EXT_MAP.put("md", 1);
         // ppt
         EXT_MAP.put("ppt", 2);
         EXT_MAP.put("pptx", 2);
@@ -93,34 +95,32 @@ public final class FileTypeUtil {
      * @param originalFilename 原始文件名（含后缀）
      * @return 0-9 数字码
      */
-    public static int classify(InputStream in, String originalFilename) throws IOException {
-        if (in == null) return 9;
-
-        /* 1. 读文件头（最多 28 字节） */
-        byte[] header = new byte[28];
-        in.mark(32);
-        int read = in.read(header);
-        in.reset();
-        if (read <= 0) return 9;
-
-        String hex = bytesToHex(header, read);
-
-        /* 2. 魔数优先 */
-        Integer code = MAGIC_MAP.get(hex);
-        if (code != null) return code;
-
-        /* 3. 前缀模糊匹配（mp4 有多头） */
-        if (hex.startsWith("000000") && hex.contains("66747970")) {
-            return 7; // mp4
-        }
-
-        /* 4. 后缀兜底 */
+    public static int classify(InputStream in, String originalFilename) {
+        // 1. 后缀直接命中（快速通道）
         String ext = getExtension(originalFilename);
         if (ext != null) {
-            Integer extCode = EXT_MAP.get(ext.toLowerCase(Locale.ROOT));
-            if (extCode != null) return extCode;
+            Integer code = EXT_MAP.get(ext.toLowerCase(Locale.ROOT));
+            if (code != null) return code;   // 已识别，直接返回
         }
 
+        // 2. 可选：魔数二次确认（只有需要时才走）
+        if (in != null && in.markSupported()) {
+            try {
+                byte[] header = new byte[28];
+                in.mark(32);
+                int read = in.read(header);
+                in.reset();
+                if (read > 0) {
+                    String hex = bytesToHex(header, read);
+                    Integer magicCode = MAGIC_MAP.get(hex);
+                    if (magicCode != null) return magicCode;
+                }
+            } catch (IOException ignore) {
+                // 魔数读失败也不影响
+            }
+        }
+
+        // 3. 都没命中 → 其他
         return 9;
     }
 
