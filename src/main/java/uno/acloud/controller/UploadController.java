@@ -12,6 +12,7 @@ import uno.acloud.service.UploadService;
 import uno.acloud.utils.JwtUtils;
 import uno.acloud.utils.ServletUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 @Slf4j
@@ -23,7 +24,7 @@ public class UploadController {
 
     @Log
     @PostMapping("/upload")
-    public Result upload(MultipartFile file, Long parentId, HttpServletRequest request) {
+    public Result upload(MultipartFile file, Long parentId, HttpServletRequest request) throws UnsupportedEncodingException {
         String jwt = ServletUtils.getToken(request);
         Map<String, Object> claims = JwtUtils.parseJWT(jwt);
         int userId = (Integer) claims.get("userId");
