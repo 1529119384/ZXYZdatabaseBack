@@ -54,6 +54,9 @@ public class UploadServiceImpl implements UploadService {
         /*
         * 文件路径没更新，前端还没适配
         * */
+        /*
+        * 上传文件没给元数据
+        * */
         fileInfo.setStorePath("555");
         fileInfo.setFileUrl(url);
         fileInfo.setUserId(userId);
