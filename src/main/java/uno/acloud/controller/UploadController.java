@@ -10,9 +10,7 @@ import uno.acloud.anno.Log;
 import uno.acloud.pojo.Result;
 import uno.acloud.service.UploadService;
 import uno.acloud.utils.JwtUtils;
-import uno.acloud.utils.OSSUploader;
 import uno.acloud.utils.ServletUtils;
-import uno.acloud.utils.UploadToLocal;
 
 import java.util.Map;
 
@@ -30,7 +28,7 @@ public class UploadController {
         Map<String, Object> claims = JwtUtils.parseJWT(jwt);
         int userId = (Integer) claims.get("userId");
 
-        String url = uploadService.upload(file, parentId,userId);
+        String url = uploadService.upload(file, parentId, userId);
         if (url == null) {
             log.info("上传文件失败");
             return Result.error("上传文件失败");
