@@ -18,8 +18,11 @@ public class FileInfo {
     /** 文件类型：0-文件夹，1-文件 */
     private Integer fileType;
 
-    /** 文件名称 */
-    private String fileName;
+    /** 文件唯一名称 */
+    private String uuidName ;
+
+    /** 原始文件名 */
+    private String originalName;
 
     /** 文件分类（后缀枚举：.txt …） */
     private Integer category;
