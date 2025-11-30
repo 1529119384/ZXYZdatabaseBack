@@ -1,9 +1,10 @@
 package uno.acloud.utils;
 
-import com.aliyun.sdk.service.oss2.*;
-import com.aliyun.sdk.service.oss2.credentials.CredentialsProvider;
+import com.aliyun.sdk.service.oss2.OSSClient;
+import com.aliyun.sdk.service.oss2.OSSClientBuilder;
 import com.aliyun.sdk.service.oss2.credentials.EnvironmentVariableCredentialsProvider;
-import com.aliyun.sdk.service.oss2.models.*;
+import com.aliyun.sdk.service.oss2.models.PutObjectRequest;
+import com.aliyun.sdk.service.oss2.models.PutObjectResult;
 import com.aliyun.sdk.service.oss2.transport.BinaryData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,27 +14,30 @@ import uno.acloud.exception.FileUploadException;
 import uno.acloud.pojo.OSSProperties;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @Component
 public class OSSUploader {
 
-    private static final long SMALL_FILE_THRESHOLD = 20 * 1024 * 1024; // 20 MB
+    private static final long SMALL_FILE_THRESHOLD = 20 * 1024 * 1024;
 
     @Autowired
     private OSSProperties ossProperties;
 
-    /**
-     * 上传成功后直接返回文件访问 URL
-     * 失败一律抛 FileUploadException，由 GlobalExceptionHandler 统一转 Result
-     */
-    public String upload(MultipartFile file) {
-        String region = ossProperties.getRegion();
-        String bucket = ossProperties.getBucket();
+    public String upload(MultipartFile file, String uuidName) throws UnsupportedEncodingException {
+        String region  = ossProperties.getRegion();
+        String bucket  = ossProperties.getBucket();
         String filename = file.getOriginalFilename();
 
-        CredentialsProvider provider = new EnvironmentVariableCredentialsProvider();
-        OSSClientBuilder builder = OSSClient.newBuilder()
+        String downloadFileName = URLEncoder.encode(filename, StandardCharsets.UTF_8)
+                .replace("+", "%20");
+        String contentDisposition = "attachment; filename*=utf-8''" + downloadFileName;
+
+        var provider = new EnvironmentVariableCredentialsProvider();
+        var builder  = OSSClient.newBuilder()
                 .credentialsProvider(provider)
                 .region(region);
 
@@ -42,20 +46,19 @@ public class OSSUploader {
 
             PutObjectResult result;
             if (file.getSize() < SMALL_FILE_THRESHOLD) {
-                log.info("小文件内存上传");
-                byte[] data = file.getBytes();
                 result = client.putObject(PutObjectRequest.newBuilder()
                         .bucket(bucket)
-                        .key(filename)
-                        .body(BinaryData.fromBytes(data))
+                        .key(uuidName)
+                        .body(BinaryData.fromBytes(file.getBytes()))
+                        .contentDisposition(contentDisposition)   // ← 直接写头
                         .build());
             } else {
-                log.info("大文件流式上传");
                 try (InputStream in = file.getInputStream()) {
                     result = client.putObject(PutObjectRequest.newBuilder()
                             .bucket(bucket)
-                            .key(filename)
+                            .key(uuidName)
                             .body(BinaryData.fromStream(in))
+                            .contentDisposition(contentDisposition)
                             .build());
                 }
             }
@@ -64,15 +67,13 @@ public class OSSUploader {
                 throw new FileUploadException("上传失败，状态码：" + result.statusCode());
             }
 
-            String url = "https://" + bucket + ".oss-" + region + ".aliyuncs.com/" + filename;
+            String url = "https://" + bucket + ".oss-" + region + ".aliyuncs.com/" + uuidName;
             log.info("上传成功，大小 {} MB，访问地址：{}", file.getSize() / (1024.0 * 1024), url);
             return url;
 
         } catch (FileUploadException e) {
-            // 业务异常直接抛
             throw e;
         } catch (Exception e) {
-            // 其他异常包装成业务异常
             log.error("上传文件系统异常", e);
             throw new FileUploadException("文件上传失败：" + e.getMessage());
         }
