@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface UploadMapper {
-    @Insert("INSERT INTO file_info (file_type, uuid_name, original_name, category, file_size, file_url, user_id, parent_id, create_time, modify_time, deleted) " +
-            "VALUES (#{fileType}, #{uuidName}, #{originalName}, #{category}, #{fileSize}, #{fileUrl}, #{userId}, #{parentId}, #{createTime}, #{modifyTime}, #{deleted})")
+    @Insert("INSERT INTO file_info (file_type, uuid_name, original_name, category, file_size, file_url, store_path, user_id, parent_id, create_time, modify_time, deleted) " +
+            "VALUES (#{fileType}, #{uuidName}, #{originalName}, #{category}, #{fileSize}, #{fileUrl}, #{storePath}, #{userId}, #{parentId}, #{createTime}, #{modifyTime}, #{deleted})")
     void add(FileInfo fileInfo);
 }
