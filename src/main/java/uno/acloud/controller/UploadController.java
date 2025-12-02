@@ -38,17 +38,17 @@ public class UploadController {
     }
     @Log
     @PostMapping("/uploadFolder")
-    public Result uploadFolder(String folderName, Long parentId, HttpServletRequest request) throws UnsupportedEncodingException {
+    public Result uploadFolder(String folderName, Long parentId, HttpServletRequest request) {
         String jwt = ServletUtils.getToken(request);
         Map<String, Object> claims = JwtUtils.parseJWT(jwt);
         int userId = (Integer) claims.get("userId");
 
         Integer folderId = uploadService.uploadFolder(folderName, parentId, userId);
         if (folderId != null) {
-            log.info("上传文件夹成功");
+            log.info("上传文件夹{}成功", folderName);
             return Result.success(folderId);
         } else {
-            log.info("上传文件夹失败");
+            log.info("上传文件夹{}失败", folderName);
             return Result.error("上传文件夹失败");
         }
     }
