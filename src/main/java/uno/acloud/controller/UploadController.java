@@ -43,9 +43,10 @@ public class UploadController {
         Map<String, Object> claims = JwtUtils.parseJWT(jwt);
         int userId = (Integer) claims.get("userId");
 
-        if (uploadService.uploadFolder(folderName, parentId, userId) ==1) {
+        Integer folderId = uploadService.uploadFolder(folderName, parentId, userId);
+        if (folderId != null) {
             log.info("上传文件夹成功");
-            return Result.success("上传文件夹成功");
+            return Result.success(folderId);
         } else {
             log.info("上传文件夹失败");
             return Result.error("上传文件夹失败");
