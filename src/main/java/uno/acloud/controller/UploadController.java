@@ -23,7 +23,7 @@ public class UploadController {
     private UploadService uploadService;
 
     @Log
-    @PostMapping("/upload")
+    @PostMapping("/uploadFile")
     public Result upload(MultipartFile file, Long parentId, HttpServletRequest request) throws UnsupportedEncodingException {
         String jwt = ServletUtils.getToken(request);
         Map<String, Object> claims = JwtUtils.parseJWT(jwt);
@@ -35,5 +35,20 @@ public class UploadController {
             return Result.error("上传文件失败");
         }
         return Result.success(url);
+    }
+    @Log
+    @PostMapping("/uploadFolder")
+    public Result uploadFolder(String folderName, Long parentId, HttpServletRequest request) throws UnsupportedEncodingException {
+        String jwt = ServletUtils.getToken(request);
+        Map<String, Object> claims = JwtUtils.parseJWT(jwt);
+        int userId = (Integer) claims.get("userId");
+
+        if (uploadService.uploadFolder(folderName, parentId, userId) ==1) {
+            log.info("上传文件夹成功");
+            return Result.success("上传文件夹成功");
+        } else {
+            log.info("上传文件夹失败");
+            return Result.error("上传文件夹失败");
+        }
     }
 }
