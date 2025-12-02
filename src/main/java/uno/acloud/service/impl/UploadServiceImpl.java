@@ -65,7 +65,7 @@ public class UploadServiceImpl implements UploadService {
         fileInfo.setStorePath("555");
         fileInfo.setFileUrl(url);
         fileInfo.setUserId(userId);
-        fileInfo.setParentId(-1L);
+        fileInfo.setParentId(parentId);
         fileInfo.setCreateTime(LocalDateTime.now());
         fileInfo.setModifyTime(LocalDateTime.now());
         fileInfo.setDeleted(0);
@@ -74,7 +74,7 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public Integer uploadFolder(String folderName, Long parentId, Integer userId) {
+    public Long uploadFolder(String folderName, Long parentId, Integer userId) {
         FileInfo folderInfo = new FileInfo();
         folderInfo.setFileType(0);
         folderInfo.setOriginalName(folderName);
@@ -90,6 +90,13 @@ public class UploadServiceImpl implements UploadService {
         folderInfo.setModifyTime(LocalDateTime.now());
         folderInfo.setDeleted(0);
 
-        return uploadMapper.addFolderInfo(folderInfo);
+        Integer result = uploadMapper.addFolderInfo(folderInfo);
+        if (result == 0) {
+            log.error("上传文件夹{}失败", folderName);
+            return null;
+        }else {
+            log.info("上传文件夹{}成功", folderName);
+            return folderInfo.getId();
+        }
     }
 }

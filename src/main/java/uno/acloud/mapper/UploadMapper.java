@@ -1,9 +1,9 @@
 package uno.acloud.mapper;
 
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import uno.acloud.pojo.FileInfo;
-import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface UploadMapper {
@@ -15,6 +15,6 @@ public interface UploadMapper {
             "user_id,parent_id,create_time,modify_time,deleted) " +
             "VALUES(#{fileType},#{originalName},#{storePath},#{userId}," +
             "#{parentId},#{createTime},#{modifyTime},#{deleted})")
-    @Options(useGeneratedKeys = true, keyProperty = "id")   // <-- 关键
+    @Options(useGeneratedKeys = true, keyProperty = "id")
     Integer addFolderInfo(FileInfo folderInfo);
 }
