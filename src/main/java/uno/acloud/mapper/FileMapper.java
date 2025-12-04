@@ -3,7 +3,10 @@ package uno.acloud.mapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Select;
 import uno.acloud.pojo.FileInfo;
+
+import java.util.List;
 
 @Mapper
 public interface FileMapper {
@@ -17,4 +20,7 @@ public interface FileMapper {
             "#{parentId},#{createTime},#{modifyTime},#{deleted})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     Integer addFolderInfo(FileInfo folderInfo);
+
+    @Select("SELECT * FROM file_info WHERE parent_id = #{parentId}")
+    List<FileInfo> getFileListByParentId(Long parentId);
 }

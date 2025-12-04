@@ -17,6 +17,7 @@ import uno.acloud.utils.UploadToLocal;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -97,5 +98,10 @@ public class FileServiceImpl implements FileService {
             log.info("上传文件夹{}成功", folderName);
             return folderInfo.getId();
         }
+    }
+
+    @Override
+    public List<FileInfo> getFileListByParentId(Long parentId) {
+        return fileMapper.getFileListByParentId(parentId);
     }
 }

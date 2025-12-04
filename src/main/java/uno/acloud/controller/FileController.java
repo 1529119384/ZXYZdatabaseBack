@@ -3,16 +3,19 @@ package uno.acloud.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import uno.acloud.anno.Log;
+import uno.acloud.pojo.FileInfo;
 import uno.acloud.pojo.Result;
 import uno.acloud.service.FileService;
 import uno.acloud.utils.JwtUtils;
 import uno.acloud.utils.ServletUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -36,6 +39,7 @@ public class FileController {
         }
         return Result.success(url);
     }
+
     @Log
     @PostMapping("/uploadFolder")
     public Result uploadFolder(String folderName, Long parentId, HttpServletRequest request) {
@@ -50,6 +54,19 @@ public class FileController {
         } else {
             log.info("上传文件夹{}失败", folderName);
             return Result.error("上传文件夹失败");
+        }
+    }
+
+    @Log
+    @GetMapping("/getFileList")
+    public Result getFileList(Long parentId) {
+        try {
+            List<FileInfo> fileList = fileService.getFileListByParentId(parentId);
+            log.info("获取文件夹{}下的文件列表成功", parentId);
+            return Result.success(fileList);
+        } catch (Exception e) {
+            log.error("获取文件夹{}下的文件列表失败", parentId, e);
+            return Result.error("获取文件列表失败");
         }
     }
 }
