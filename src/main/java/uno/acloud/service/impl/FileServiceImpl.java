@@ -6,10 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import uno.acloud.anno.Log;
-import uno.acloud.mapper.UploadMapper;
+import uno.acloud.mapper.FileMapper;
 import uno.acloud.pojo.FileInfo;
-import uno.acloud.pojo.Result;
-import uno.acloud.service.UploadService;
+import uno.acloud.service.FileService;
 import uno.acloud.utils.FileNameUtil;
 import uno.acloud.utils.FileTypeUtil;
 import uno.acloud.utils.OSSUploader;
@@ -21,14 +20,14 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Service
-public class UploadServiceImpl implements UploadService {
+public class FileServiceImpl implements FileService {
 
     @Autowired
     private OSSUploader ossUploader;
     @Autowired
     private UploadToLocal uploadToLocal;
     @Autowired
-    private UploadMapper uploadMapper;
+    private FileMapper fileMapper;
 
     @Log
     @PostMapping("/upload")
@@ -69,7 +68,7 @@ public class UploadServiceImpl implements UploadService {
         fileInfo.setCreateTime(LocalDateTime.now());
         fileInfo.setModifyTime(LocalDateTime.now());
         fileInfo.setDeleted(0);
-        uploadMapper.addFileInfo(fileInfo);
+        fileMapper.addFileInfo(fileInfo);
         return url;
     }
 
@@ -90,7 +89,7 @@ public class UploadServiceImpl implements UploadService {
         folderInfo.setModifyTime(LocalDateTime.now());
         folderInfo.setDeleted(0);
 
-        Integer result = uploadMapper.addFolderInfo(folderInfo);
+        Integer result = fileMapper.addFolderInfo(folderInfo);
         if (result == 0) {
             log.error("上传文件夹{}失败", folderName);
             return null;

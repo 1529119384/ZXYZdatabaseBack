@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import uno.acloud.anno.Log;
 import uno.acloud.pojo.Result;
-import uno.acloud.service.UploadService;
+import uno.acloud.service.FileService;
 import uno.acloud.utils.JwtUtils;
 import uno.acloud.utils.ServletUtils;
 
@@ -17,10 +17,10 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-public class UploadController {
+public class FileController {
 
     @Autowired
-    private UploadService uploadService;
+    private FileService fileService;
 
     @Log
     @PostMapping("/uploadFile")
@@ -29,7 +29,7 @@ public class UploadController {
         Map<String, Object> claims = JwtUtils.parseJWT(jwt);
         int userId = (Integer) claims.get("userId");
 
-        String url = uploadService.upload(file, parentId, userId);
+        String url = fileService.upload(file, parentId, userId);
         if (url == null) {
             log.info("上传文件失败");
             return Result.error("上传文件失败");
@@ -43,7 +43,7 @@ public class UploadController {
         Map<String, Object> claims = JwtUtils.parseJWT(jwt);
         int userId = (Integer) claims.get("userId");
 
-        Long folderId = uploadService.uploadFolder(folderName, parentId, userId);
+        Long folderId = fileService.uploadFolder(folderName, parentId, userId);
         if (folderId != null) {
             log.info("上传文件夹{}成功", folderName);
             return Result.success(folderId);

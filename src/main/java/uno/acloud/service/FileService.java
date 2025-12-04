@@ -4,7 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.UnsupportedEncodingException;
 
-public interface UploadService {
+public interface FileService {
     String upload(MultipartFile file, Long parentId,Integer userId) throws UnsupportedEncodingException;
 
     Long uploadFolder(String folderName, Long parentId, Integer userId);
