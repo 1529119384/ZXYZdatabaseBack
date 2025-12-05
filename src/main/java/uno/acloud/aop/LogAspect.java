@@ -19,10 +19,11 @@ import java.util.Arrays;
 @Component
 @Aspect
 public class LogAspect {
-@Autowired
-private OperateLogMapper operateLogMapper;
-@Autowired
-private HttpServletRequest request;
+    @Autowired
+    private OperateLogMapper operateLogMapper;
+    @Autowired
+    private HttpServletRequest request;
+
     @Around("@annotation(uno.acloud.anno.Log)")
     public Object recordLog(ProceedingJoinPoint joinPoint) throws Throwable {
 
@@ -36,7 +37,7 @@ private HttpServletRequest request;
         String className = joinPoint.getTarget().getClass().getName();
         String methodName = joinPoint.getSignature().getName();
         // 获取参数
-        Object [] args = joinPoint.getArgs();
+        Object[] args = joinPoint.getArgs();
         String methodParams = Arrays.toString(args);
 
         long start = System.currentTimeMillis();
@@ -47,8 +48,8 @@ private HttpServletRequest request;
         // 获取耗时
         long costTime = end - start;
         // 封装日志
-        log.info("用户{}在{}操作类{}方法{}参数{}返回{}耗时{}",operateUserId,operateTime,className,methodName,methodParams,returnVa,costTime);
-        OperateLog operateLog = new OperateLog(null,operateUserId,operateTime,className,methodName,methodParams,returnVa,costTime);
+        log.info("用户{}在{}操作类{}方法{}参数{}返回{}耗时{}", operateUserId, operateTime, className, methodName, methodParams, returnVa, costTime);
+        OperateLog operateLog = new OperateLog(null, operateUserId, operateTime, className, methodName, methodParams, returnVa, costTime);
 
         operateLogMapper.insert(operateLog);
         return result;
