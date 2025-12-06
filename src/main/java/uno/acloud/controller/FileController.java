@@ -23,7 +23,7 @@ import java.util.Map;
 public class FileController {
 
     @Autowired
-    private FileService fileService;
+    private  FileService fileService;
 
     @Log
     @PostMapping("/uploadFile")

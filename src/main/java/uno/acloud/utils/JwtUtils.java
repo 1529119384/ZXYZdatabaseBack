@@ -18,7 +18,7 @@ public class JwtUtils {
         String jwt = Jwts.builder()
                 .signWith(SignatureAlgorithm.HS256, "zxyz")
                 .setClaims(claims)
-                .setExpiration(new Date(System.currentTimeMillis() + 3600 * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + 3600 * 1000 * 24))
                 .compact();
         log.info("生成JWT成功,token:{}", jwt);
         return jwt;
