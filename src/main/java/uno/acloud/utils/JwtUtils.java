@@ -14,6 +14,8 @@ public class JwtUtils {
         Map<String, Object> claims = new java.util.HashMap<>();
         claims.put("userId", u.getId());
         claims.put("username", u.getUsername());
+        claims.put("role", u.getRole());
+//        claims.put("permission", u.getPermission());
 
         String jwt = Jwts.builder()
                 .signWith(SignatureAlgorithm.HS256, "zxyz")
