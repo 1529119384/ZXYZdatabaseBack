@@ -26,7 +26,8 @@ public class StpInterfaceImpl implements StpInterface {
     public List<String> getPermissionList(Object loginId, String loginType) {
         log.info("正在查询权限loginId: {}, loginType: {}", loginId, loginType);
         // 本 list 仅做模拟，实际项目中要根据具体业务逻辑来查询权限
-        List<String> list = permissionRoleMapper.getPermissionByUserID((Integer) loginId);
+        List<String> list = permissionRoleMapper.getPermissionByUserID(Integer.parseInt(loginId.toString()));
+        log.info("查询到的权限list: {}", list);
 
         return list;
     }
@@ -37,7 +38,8 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
         log.info("正在查询角色loginId: {}, loginType: {}", loginId, loginType);
-        List<String> list = permissionRoleMapper.getRoleByUserID((Integer) loginId);
+        List<String> list = permissionRoleMapper.getRoleByUserID(Integer.parseInt(loginId.toString()));
+        log.info("查询到的角色list: {}", list);
         return list;
     }
 
