@@ -19,5 +19,4 @@ public class OperateLog {
     private String returnValue;
     private Long costTime;
 
-
 }
