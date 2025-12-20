@@ -21,6 +21,6 @@ public interface FileMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     Integer addFolderInfo(FileInfo folderInfo);
 
-    @Select("SELECT * FROM file_info WHERE parent_id = #{parentId}")
+    @Select("SELECT * FROM file_info WHERE parent_id = #{parentId} ORDER BY file_type , modify_time DESC")
     List<FileInfo> getFileListByParentId(Long parentId);
 }
