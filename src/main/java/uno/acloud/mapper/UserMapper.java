@@ -9,9 +9,9 @@ import uno.acloud.pojo.User;
 
 @Mapper
 public interface UserMapper {
-    @Select("SELECT * FROM users WHERE username=#{username} AND password=#{password}")
+    @Select("SELECT * FROM user WHERE username=#{username} AND password=#{password}")
     User getByUsernameAndPassword(User user);
 
-    @Insert("INSERT INTO users(username,password,create_time) VALUES(#{username},#{password},#{createTime})")
+    @Insert("INSERT INTO user(username,password,create_time) VALUES(#{username},#{password},#{createTime})")
     int addByUsernameAndPassword(User user);
 }
