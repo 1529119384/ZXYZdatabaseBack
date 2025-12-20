@@ -73,5 +73,19 @@ public class FileController {
         }
     }
 
+    @PostMapping("/createFolder")
+    @SaCheckRole("admin")
+    public Result createFolder(String folderName, Long parentId) {
+        int userId = StpUtil.getLoginIdAsInt();
+        Long folderId = fileService.uploadFolder(folderName, parentId, userId);
+        if (folderId != null) {
+            log.info("创建文件夹{}成功", folderName);
+            return Result.success(folderId);
+        } else {
+            log.info("创建文件夹{}失败", folderName);
+            return Result.error("创建文件夹失败");
+        }
+    }
+
 
 }
