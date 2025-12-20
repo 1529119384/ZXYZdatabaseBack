@@ -1,5 +1,6 @@
 package uno.acloud.controller;
 
+import cn.dev33.satoken.stp.SaTokenInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,7 @@ public class UserController {
     @PostMapping("/login")
     public Result login(@RequestBody User user) {
         log.info("用户{}申请登录,请求参数:{}", user.getUsername(), user);
-        String jwt = userService.login(user);
+        SaTokenInfo jwt = userService.login(user);
         if (jwt != null) {
             log.info("用户{}登录成功,返回登录凭证:{}", user.getUsername(), jwt);
             return Result.success(jwt);
