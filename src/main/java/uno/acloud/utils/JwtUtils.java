@@ -23,6 +23,7 @@ public class JwtUtils {
                 .setExpiration(new Date(System.currentTimeMillis() + 3600 * 1000 * 24))
                 .compact();
         log.info("生成JWT成功,token:{}", jwt);
+
         return jwt;
     }
 

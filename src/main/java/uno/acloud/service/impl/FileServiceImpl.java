@@ -68,7 +68,7 @@ public class FileServiceImpl implements FileService {
         fileInfo.setParentId(parentId);
         fileInfo.setCreateTime(LocalDateTime.now());
         fileInfo.setModifyTime(LocalDateTime.now());
-        fileInfo.setDeleted(0);
+        fileInfo.setDeleted(false);
         fileMapper.addFileInfo(fileInfo);
         return url;
     }
@@ -88,7 +88,7 @@ public class FileServiceImpl implements FileService {
         folderInfo.setParentId(parentId);
         folderInfo.setCreateTime(LocalDateTime.now());
         folderInfo.setModifyTime(LocalDateTime.now());
-        folderInfo.setDeleted(0);
+        folderInfo.setDeleted(false);
 
         Integer result = fileMapper.addFolderInfo(folderInfo);
         if (result == 0) {

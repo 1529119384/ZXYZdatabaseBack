@@ -1,5 +1,6 @@
 package uno.acloud.aop;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSONObject;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +30,9 @@ public class LogAspect {
 
 
         // 获取用户ID
-        String token = request.getHeader("token");
-        Integer operateUserId = (Integer) JwtUtils.parseJWT(token).get("id");
+        String jwt = request.getHeader("token");
+
+        Integer operateUserId = (Integer) StpUtil.getExtra(jwt,"userId");
         // 获取操作时间
         LocalDateTime operateTime = LocalDateTime.now();
         // 获取类名和方法名

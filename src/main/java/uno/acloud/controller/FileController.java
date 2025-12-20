@@ -1,5 +1,6 @@
 package uno.acloud.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,7 @@ public class FileController {
     @PostMapping("/uploadFile")
     public Result upload(MultipartFile file, Long parentId, HttpServletRequest request) throws UnsupportedEncodingException {
         String jwt = ServletUtils.getToken(request);
-        Map<String, Object> claims = JwtUtils.parseJWT(jwt);
-        int userId = (Integer) claims.get("userId");
+        int userId = (Integer) StpUtil.getExtra(jwt,"userId");
 
         String url = fileService.upload(file, parentId, userId);
         if (url == null) {
@@ -44,8 +44,7 @@ public class FileController {
     @PostMapping("/uploadFolder")
     public Result uploadFolder(String folderName, Long parentId, HttpServletRequest request) {
         String jwt = ServletUtils.getToken(request);
-        Map<String, Object> claims = JwtUtils.parseJWT(jwt);
-        int userId = (Integer) claims.get("userId");
+        int userId = (Integer) StpUtil.getExtra(jwt,"userId");
 
         Long folderId = fileService.uploadFolder(folderName, parentId, userId);
         if (folderId != null) {

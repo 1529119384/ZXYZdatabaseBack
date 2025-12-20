@@ -1,5 +1,6 @@
 package uno.acloud.filter;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSONObject;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -43,6 +44,7 @@ public class LoginCheckFilter implements Filter {
         log.info("用户有令牌,开始校验令牌");
         try {
             JwtUtils.parseJWT(jwt);
+            Integer operateUserId = (Integer) StpUtil.getExtra(jwt,"userId");
         } catch (Exception e) {
             log.info("令牌校验失败,返回未登录页面");
             Result error = Result.error("NO_LOGIN");
