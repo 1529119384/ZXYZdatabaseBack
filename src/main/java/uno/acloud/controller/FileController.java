@@ -30,7 +30,7 @@ public class FileController {
     @PostMapping("/uploadFile")
     public Result upload(MultipartFile file, Long parentId, HttpServletRequest request) throws UnsupportedEncodingException {
         String jwt = ServletUtils.getToken(request);
-        int userId = (Integer) StpUtil.getExtra(jwt,"userId");
+        int userId = Integer.parseInt(StpUtil.getExtra(jwt,"userId").toString());
 
         String url = fileService.upload(file, parentId, userId);
         if (url == null) {
