@@ -2,6 +2,7 @@ package uno.acloud.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.annotation.SaMode;
 import cn.dev33.satoken.stp.StpUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +29,11 @@ public class FileController {
 
     @Log
     @PostMapping("/uploadFile")
-    @SaCheckPermission("admin")
-    public Result upload(MultipartFile file, Long parentId, HttpServletRequest request) throws UnsupportedEncodingException {
-        String jwt = ServletUtils.getToken(request);
-        int userId = Integer.parseInt(StpUtil.getExtra(jwt, "userId").toString());
-
+    @SaCheckRole("admin")
+    public Result upload(MultipartFile file, Long parentId) throws UnsupportedEncodingException {
+//        String jwt = ServletUtils.getToken(request);
+//        int userId = Integer.parseInt(StpUtil.getExtra(jwt, "userId").toString());
+        int userId = StpUtil.getLoginIdAsInt();
         String url = fileService.upload(file, parentId, userId);
         if (url == null) {
             log.info("上传文件失败");
@@ -43,10 +44,9 @@ public class FileController {
 
     @Log
     @PostMapping("/uploadFolder")
-    @SaCheckPermission("admin")
-    public Result uploadFolder(String folderName, Long parentId, HttpServletRequest request) {
-        String jwt = ServletUtils.getToken(request);
-        int userId = (Integer) StpUtil.getExtra(jwt, "userId");
+    @SaCheckRole("admin")
+    public Result uploadFolder(String folderName, Long parentId) {
+        int userId = StpUtil.getLoginIdAsInt();
 
         Long folderId = fileService.uploadFolder(folderName, parentId, userId);
         if (folderId != null) {
@@ -60,7 +60,7 @@ public class FileController {
 
     @Log
     @GetMapping("/getFileList")
-    @SaCheckRole("user")
+    @SaCheckRole(value = {"admin", "user"}, mode = SaMode.OR)
     public Result getFileList(Long parentId) {
         try {
             List<FileInfo> fileList = fileService.getFileListByParentId(parentId);
