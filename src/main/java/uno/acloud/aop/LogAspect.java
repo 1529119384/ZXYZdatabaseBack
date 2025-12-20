@@ -30,9 +30,9 @@ public class LogAspect {
 
 
         // 获取用户ID
-        String jwt = request.getHeader("token");
+        String jwt = request.getHeader("loginUser");
 
-        Integer operateUserId = (Integer) StpUtil.getExtra(jwt,"userId");
+        Integer operateUserId = Integer.valueOf(StpUtil.getExtra(jwt,"userId").toString());
         // 获取操作时间
         LocalDateTime operateTime = LocalDateTime.now();
         // 获取类名和方法名
@@ -50,7 +50,7 @@ public class LogAspect {
         // 获取耗时
         long costTime = end - start;
         // 封装日志
-        log.info("用户{}在{}操作类{}方法{}参数{}返回{}耗时{}", operateUserId, operateTime, className, methodName, methodParams, returnVa, costTime);
+//        log.info("用户{}在{}操作类{}方法{}参数{}返回{}耗时{}", operateUserId, operateTime, className, methodName, methodParams, returnVa, costTime);
         OperateLog operateLog = new OperateLog(null, operateUserId, operateTime, className, methodName, methodParams, returnVa, costTime);
 
         operateLogMapper.insert(operateLog);
