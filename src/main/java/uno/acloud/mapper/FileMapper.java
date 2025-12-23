@@ -23,4 +23,7 @@ public interface FileMapper {
 
     @Select("SELECT * FROM file_info WHERE parent_id = #{parentId} ORDER BY file_type , modify_time DESC")
     List<FileInfo> getFileListByParentId(Long parentId);
+
+    @Select("SELECT COUNT(*) FROM file_info WHERE parent_id = #{parentId} AND deleted = 0 AND original_name = #{originalName}")
+    Boolean checkFileExist(Long parentId , String originalName);
 }
